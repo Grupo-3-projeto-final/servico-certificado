@@ -1,38 +1,60 @@
 using System;
 using System.IO;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Layer;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace servico_certificado.Infrastructure.Utilities;
 public class GeradorCertificadoPDF
 {
     public byte[] GerarCertificado(string nome, string curso, string cpf)
         {
-
-            if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(curso) || string.IsNullOrEmpty(cpf))
-            {
-                throw new ArgumentException("Os parâmetros nome, curso e cpf devem ser informados.");
-            }
+            
+            string logoFilePath = "C:/TestePDF/logo/logoCertificado.png";
 
             using (MemoryStream ms = new MemoryStream())
             {
-
                 using (var writer = new PdfWriter(ms))
                 using (var pdf = new PdfDocument(writer))
-                using (var document = new Document(pdf, PageSize.A4))
+                using (var document = new Document(pdf, PageSize.A4.Rotate()))
                 {
-                    document.Add(new Paragraph("CERTIFICADO").SetFontSize(32).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+
+
+                    Image logo = new Image(ImageDataFactory.Create(logoFilePath));
+                    logo.SetFixedPosition(0, 0);
+                    logo.ScaleToFit(document.GetPdfDocument().GetDefaultPageSize().GetWidth(), document.GetPdfDocument().GetDefaultPageSize().GetHeight());
+                    document.Add(logo);
+
+                    string titulo = "CERTIFICADO";
+                    document.Add(new Paragraph(titulo).SetFontSize(32).SetTextAlignment(TextAlignment.CENTER));
 
                     document.Add(new Paragraph("\n\n\n"));
 
-                    document.Add(new Paragraph($"Certificamos que {nome.ToUpper()} concluiu o curso de {curso.ToUpper()}.").SetFontSize(16).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                    document.Add(new Paragraph($"CPF: {cpf}").SetFontSize(16).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                    string textoCertificado = "Certificamos que {0} concluiu o curso de {1}.";
+                    string textoCPF = "CPF: {0}";
+
+                    Paragraph certificado = new Paragraph(string.Format(textoCertificado, nome.ToUpper(), curso.ToUpper()))
+                        .SetFontSize(16)
+                        .SetTextAlignment(TextAlignment.CENTER);
+                    document.Add(certificado);
+
+                    Paragraph cpfParagrafo = new Paragraph(string.Format(textoCPF, cpf))
+                        .SetFontSize(16)
+                        .SetTextAlignment(TextAlignment.CENTER);
+                    document.Add(cpfParagrafo);
                 }
 
                 return ms.ToArray();
             }
         }
-
 }
+
