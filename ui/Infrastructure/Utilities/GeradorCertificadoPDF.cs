@@ -1,42 +1,47 @@
 using System;
 using System.IO;
 using iText.IO.Image;
-using iText.Kernel.Colors;
-using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Layer;
-using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 
-namespace servico_certificado.Infrastructure.Utilities;
-public class GeradorCertificadoPDF
+namespace servico_certificado.Infrastructure.Utilities
 {
-    public byte[] GerarCertificado(string nome, string curso, string cpf)
+    public class GeradorCertificadoPDF
+    {
+        public byte[] GerarCertificado(string nome, string curso, string cpf)
         {
-            
-            string logoFilePath = "C:/TestePDF/logo/logoCertificado.png";
-
             using (MemoryStream ms = new MemoryStream())
             {
                 using (var writer = new PdfWriter(ms))
                 using (var pdf = new PdfDocument(writer))
                 using (var document = new Document(pdf, PageSize.A4.Rotate()))
                 {
-
-
+                    // Carregue a imagem do logo
+                    string logoFilePath = "C:/TestePDF/logo/PlanoFundoCertificado.png";
                     Image logo = new Image(ImageDataFactory.Create(logoFilePath));
-                    logo.SetFixedPosition(0, 0);
-                    logo.ScaleToFit(document.GetPdfDocument().GetDefaultPageSize().GetWidth(), document.GetPdfDocument().GetDefaultPageSize().GetHeight());
-                    document.Add(logo);
 
+                    // Obtenha o tamanho da página
+                    Rectangle pageSize = document.GetPdfDocument().GetDefaultPageSize();
+
+                    // Defina o tamanho da imagem como o tamanho da página
+                    logo.ScaleToFit(pageSize.GetWidth(), pageSize.GetHeight());
+
+                    // Defina a posição da imagem como plano de fundo
+                    logo.SetFixedPosition(0, 0);
+
+                    // Adicione a imagem ao documento como plano de fundo
+                    document.Add(logo);
+                     document.Add(new Paragraph("\n\n\n"));
+                      document.Add(new Paragraph("\n\n\n"));
+                       document.Add(new Paragraph("\n\n\n"));
+
+                    // Adicione o conteúdo do certificado
                     string titulo = "CERTIFICADO";
                     document.Add(new Paragraph(titulo).SetFontSize(32).SetTextAlignment(TextAlignment.CENTER));
-
                     document.Add(new Paragraph("\n\n\n"));
 
                     string textoCertificado = "Certificamos que {0} concluiu o curso de {1}.";
@@ -56,5 +61,6 @@ public class GeradorCertificadoPDF
                 return ms.ToArray();
             }
         }
+    }
 }
 
