@@ -8,18 +8,10 @@ namespace servico_certificado.Application.Entities
 {
     public class CertificadoService
     {
-        private readonly GeradorCertificadoPDF certificadoPDFGenerator;
-    
-        
-
-        public CertificadoService(GeradorCertificadoPDF certificadoPDFGenerator)
-        {
-            this.certificadoPDFGenerator = certificadoPDFGenerator;
-        }
-
         public byte[] EmitirCertificado(string nome, string curso, string cpf)
         {
-        return certificadoPDFGenerator.GerarCertificado(nome, curso, cpf);
+            var htmlCertificado = MontarHtmlCertificado.GerarHtmlCertificado(nome, curso, cpf);
+            return HtmlParaPdf.ConverterHtmlParaPdf(htmlCertificado);
         }
 
         public async Task SalvarDadosCertificado(CertificadoAluno dadosCertificado)

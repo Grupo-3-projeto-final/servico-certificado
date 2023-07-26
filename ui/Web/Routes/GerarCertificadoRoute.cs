@@ -3,20 +3,19 @@ using servico_certificado.Application.Entities;
 using servico_certificado.Domain.Entities;
 using servico_certificado.Infrastructure;
 using servico_certificado.Infrastructure.Utilities;
+using System.Collections;
 
 namespace servico_certificado.Web.Routes
 {
     public class GerarCertificadoRoute
     {
         private readonly WebApplication _app;
-        private readonly GeradorCertificadoPDF _geradorCertificadoPDF;
         private readonly CertificadoService _certificado;
 
         public GerarCertificadoRoute(WebApplication app)
         {
             _app = app;
-            _geradorCertificadoPDF = new GeradorCertificadoPDF();
-            _certificado = new CertificadoService(_geradorCertificadoPDF);
+            _certificado = new CertificadoService();
         }
 
         public void Register()
