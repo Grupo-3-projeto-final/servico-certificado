@@ -1,3 +1,4 @@
+using IdentityGama.Filters;
 using Microsoft.AspNetCore.Mvc;
 using servico_certificado.Application.Entities;
 using servico_certificado.Domain.Entities;
@@ -31,14 +32,15 @@ namespace servico_certificado.Web.Routes
                     Cpf = dados.CPF
                 };
 
-                _certificado.SalvarDadosCertificado(dadosCertificado);
+                _certificado.SalvarDadosCertificado(dadosCertificado).Wait();
 
                 context.Response.ContentType = "application/pdf";
                 context.Response.Headers.Add("Content-Disposition", "attachment; filename=Certificado.pdf");
                 return context.Response.Body.WriteAsync(pdfBytes, 0, pdfBytes.Length);
             })
             .WithName("PostGerarCertificado")
-            .WithOpenApi();
+            .WithOpenApi()
+            .AddEndpointFilter<AuthenticationAttribute>();
         }
     }
 }
