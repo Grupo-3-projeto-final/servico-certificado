@@ -1,5 +1,4 @@
-﻿using iText.StyledXmlParser.Jsoup.Nodes;
-using servico_certificado.Infrastructure.Utilities.Templates;
+﻿using servico_certificado.Infrastructure.Utilities.Templates;
 
 namespace servico_certificado.Infrastructure.Utilities
 {

@@ -1,8 +1,17 @@
+using servico_certificado.Domain.interfaces;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
+
 namespace servico_certificado.Infrastructure.Utilities
 {
-    public static class HtmlParaPdf 
+    public class HtmlParaPdf : IHtmlParaPdf
     {
-        public static byte[] ConverterHtmlParaPdf(string htmlContent)
+        private readonly IConverter _converterPdf;
+        public HtmlParaPdf(IConverter converterPdf)
+        {
+            _converterPdf = converterPdf;
+        }
+        public  byte[] ConverterHtmlParaPdf(string htmlContent)
         {
             var modifiedHtmlContent = $@"
                 <style>
@@ -25,10 +34,22 @@ namespace servico_certificado.Infrastructure.Utilities
                     {htmlContent}
                 </div>";
 
-            var renderer = new ChromePdfRenderer();
-            var pdfDocument = renderer.RenderHtmlAsPdf(modifiedHtmlContent);
+            var doc = new HtmlToPdfDocument()
+            {
+                GlobalSettings = {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = PaperKind.A4
+                },
+                Objects = {
+                    new ObjectSettings() {
+                        HtmlContent = modifiedHtmlContent,
+                        WebSettings= { DefaultEncoding = "utf-8"}
+                    }
+                }
+            };
 
-            return pdfDocument.Stream.ToArray();
+            return _converterPdf.Convert(doc);
         }
     }
 }

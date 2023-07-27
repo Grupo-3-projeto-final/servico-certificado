@@ -2,6 +2,7 @@ using IdentityGama.Filters;
 using Microsoft.AspNetCore.Mvc;
 using servico_certificado.Application.Entities;
 using servico_certificado.Domain.Entities;
+using servico_certificado.Domain.interfaces;
 using servico_certificado.Infrastructure;
 using servico_certificado.Infrastructure.Utilities;
 using System.Collections;
@@ -13,10 +14,10 @@ namespace servico_certificado.Web.Routes
         private readonly WebApplication _app;
         private readonly CertificadoService _certificado;
 
-        public GerarCertificadoRoute(WebApplication app)
+        public GerarCertificadoRoute(WebApplication app, IHtmlParaPdf htmlParaPdf)
         {
             _app = app;
-            _certificado = new CertificadoService();
+            _certificado = new CertificadoService(htmlParaPdf);
         }
 
         public void Register()
