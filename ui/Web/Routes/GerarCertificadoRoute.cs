@@ -1,47 +1,39 @@
-using IdentityGama.Filters;
 using Microsoft.AspNetCore.Mvc;
 using servico_certificado.Application.Entities;
 using servico_certificado.Domain.Entities;
 using servico_certificado.Domain.interfaces;
 using servico_certificado.Infrastructure;
-using servico_certificado.Infrastructure.Utilities;
-using System.Collections;
+using System.Threading.Tasks;
 
-namespace servico_certificado.Web.Routes
+namespace servico_certificado.Web.Controllers
 {
-    public class GerarCertificadoRoute
+    [Route("api/v1/certificado")]
+    [ApiController]
+    public class GerarCertificadoController : ControllerBase
     {
-        private readonly WebApplication _app;
         private readonly CertificadoService _certificado;
 
-        public GerarCertificadoRoute(WebApplication app, IHtmlParaPdf htmlParaPdf)
+        public GerarCertificadoController(CertificadoService certificado)
         {
-            _app = app;
-            _certificado = new CertificadoService(htmlParaPdf);
+            _certificado = certificado;
         }
 
-        public void Register()
+        [HttpPost]
+        [Route("gerar-certificado")]
+        public async Task<IActionResult> GerarCertificado([FromBody] DadosCertificado dados)
         {
-            _app.MapPost("/gerar-certificado", (HttpContext context, [FromBody] DadosCertificado dados) =>
+            var pdfBytes = _certificado.EmitirCertificado(dados.Nome, dados.Curso, dados.CPF);
+
+            var dadosCertificado = new CertificadoAluno
             {
-                var pdfBytes = _certificado.EmitirCertificado(dados.Nome, dados.Curso, dados.CPF);
+                Nome = dados.Nome,
+                Curso = dados.Curso,
+                Cpf = dados.CPF
+            };
 
-                var dadosCertificado = new CertificadoAluno
-                {
-                    Nome = dados.Nome,
-                    Curso = dados.Curso,
-                    Cpf = dados.CPF
-                };
+            await _certificado.SalvarDadosCertificado(dadosCertificado);
 
-                _certificado.SalvarDadosCertificado(dadosCertificado).Wait();
-
-                context.Response.ContentType = "application/pdf";
-                context.Response.Headers.Add("Content-Disposition", "attachment; filename=Certificado.pdf");
-                return context.Response.Body.WriteAsync(pdfBytes, 0, pdfBytes.Length);
-            })
-            .WithName("PostGerarCertificado")
-            .WithOpenApi();
-            //.AddEndpointFilter<AuthenticationAttribute>();
+            return File(pdfBytes, "application/pdf", "Certificado.pdf");
         }
     }
 }
