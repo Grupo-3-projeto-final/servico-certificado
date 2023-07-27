@@ -39,8 +39,8 @@ namespace servico_certificado.Web.Routes
                 return context.Response.Body.WriteAsync(pdfBytes, 0, pdfBytes.Length);
             })
             .WithName("PostGerarCertificado")
-            .WithOpenApi()
-            .AddEndpointFilter<AuthenticationAttribute>();
+            .WithOpenApi();
+            //.AddEndpointFilter<AuthenticationAttribute>();
         }
     }
 }

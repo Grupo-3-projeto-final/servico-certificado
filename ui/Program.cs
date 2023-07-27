@@ -14,7 +14,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 new GerarCertificadoRoute(app).Register();
 
