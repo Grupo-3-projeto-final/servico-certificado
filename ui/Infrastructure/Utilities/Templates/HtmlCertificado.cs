@@ -14,11 +14,8 @@
                                         <h2>Certificado</h2>
                                         <div class=""box-info"">
                                             <div class=""info"">
-                                                <strong>Nome do Aluno:</strong> {1}
-                                            </div>
-                                            <div class=""info"">
-                                                <strong>Nome do Curso:</strong> {2}
-                                            </div>
+                                            <p> Certificamos que <strong>{1}</strong>  concluiu o curso de <strong>{2}</strong>. </p>
+                            
                                             <div class=""info"">
                                                 <strong>CPF:</strong> {3}
                                             </div>
@@ -36,7 +33,8 @@
                                         }
 
                                         .certificate-content h2 {
-                                            margin-bottom: 20px;
+                                            margin-top: 300px;
+                                            font-size: 60px;
                                         }
 
                                         .info {
@@ -61,8 +59,8 @@
                                             background-size: contain;
                                             background-repeat: no-repeat;
                                             position: absolute;
-                                            top: 10px; 
-                                            left: 10px;
+                                            bottom: 10px; 
+                                            right: 450px;
                                         }
                                     </style>";
     }
