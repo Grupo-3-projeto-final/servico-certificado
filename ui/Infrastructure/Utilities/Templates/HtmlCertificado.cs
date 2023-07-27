@@ -35,19 +35,6 @@
                                             display: flex;
                                         }
 
-                                        .certificate-content {
-                                            text-align: center;
-                                            background-color: rgba(255, 255, 255, 0.8);
-                                            padding: 20px;
-                                            border-radius: 10px;
-                                            max-width: 600px;
-                                            margin: 0 auto;
-                                            background-image: url(""https://www.transparentpng.com/thumb/certificate-template/certificate-template-png-1.png"");
-                                            background-size: cover;
-                                            padding: 250px;
-                                            left: 300px;
-                                        }
-
                                         .certificate-content h2 {
                                             margin-bottom: 20px;
                                         }
@@ -74,8 +61,8 @@
                                             background-size: contain;
                                             background-repeat: no-repeat;
                                             position: absolute;
-                                            top: 490px; 
-                                            left: 850px;
+                                            top: 10px; 
+                                            left: 10px;
                                         }
                                     </style>";
     }
